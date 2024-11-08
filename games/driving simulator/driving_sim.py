@@ -7,9 +7,9 @@ pygame.font.init()
 #---VARS---
 
 #ASSETS
-CAR_IMAGE = pygame.image.load(os.path.join('games', 'driving sim', 'Assets', 'car.png'))
-ROAD_LINES_IMAGE = pygame.image.load(os.path.join('games', 'driving sim','Assets', 'road.png'))
-GAS_CAN_IMAGE = pygame.image.load(os.path.join('games', 'driving sim','Assets', 'gas.png'))
+CAR_IMAGE = pygame.image.load(os.path.join('games', 'driving simulator', 'Assets', 'car.png'))
+ROAD_LINES_IMAGE = pygame.image.load(os.path.join('games', 'driving simulator','Assets', 'road.png'))
+GAS_CAN_IMAGE = pygame.image.load(os.path.join('games', 'driving simulator','Assets', 'gas.png'))
 
 #CLIENT
 WIDTH, HEIGHT = 600, 1000
