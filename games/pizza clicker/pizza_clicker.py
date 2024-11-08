@@ -22,6 +22,7 @@ PIZZA_POS = WIDTH/4, HEIGHT/2
 #UPGRADES
 MULTIPLIER_ADD = 1
 UPGRADE_COST = 10
+UPGRADE_COST_INCREASE = 2
 UPGRADE_WIDTH = 450
 UPGRADE_HEIGHT = 75
 #CURRANCY
@@ -67,7 +68,9 @@ def main():
                 if upgrade_multiplier.collidepoint(mouse_pos):
                     if(money >= multiplier_cost):
                         money_muliplier += 1
-                        money -= multiplier_cost
+                        money -= int(multiplier_cost)
+                        multiplier_cost *= UPGRADE_COST_INCREASE
+                        int(multiplier_cost)
                         print("---MULTIPLIER---")
                         print(money_muliplier)
                         print("---MULTIPLIER---")
@@ -75,8 +78,8 @@ def main():
                         print("ERROR, NOT ENOUGH MONEY")
             if event.type == pygame.QUIT:
                 run = False
-        peps_text = font.render('Money: ' + str(money), False, WHITE)
-        upgrade_text = small_font.render('NEXT UPGRADE | COST: ' + str(multiplier_cost), False, BLACK)
+        peps_text = font.render('Money: ' + str(int(money)), False, WHITE)
+        upgrade_text = small_font.render('NEXT UPGRADE | COST: ' + str(int(multiplier_cost)), False, BLACK)
         draw_window(peps_text, upgrade_text, upgrade_multiplier)
 
 def clicked_circle(self, radius):
