@@ -22,7 +22,7 @@ BUTTON_POS = (WIDTH/2, HEIGHT/2)
 
 #---VARS---
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("work pls")
+pygame.display.set_caption("GAMBLE!!!!")
 
 def draw_window(times_clicked_text, failiure_chance_text): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
