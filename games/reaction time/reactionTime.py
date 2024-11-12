@@ -1,4 +1,4 @@
-import pygame #MAKE SURE PYGAME IS INSTALLED
+import pygame
 import random
 pygame.font.init()
 #CLIENT VARS
@@ -20,14 +20,17 @@ def main():
 
     # Stopwatch
     milliseconds = 0
-    current_ticks = 0
+    current_ticks = 0 
     ticks = 0
 
-    # Timner
+    # Timer
     randomRange = random.randint(3, 6)
     TIMEREVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(TIMEREVENT, randomRange * 1000)
     
+    
+    font = pygame.font.SysFont('Arial', 60)
+    time_text = font.render('', False, (0, 0, 0))
 
     run = True
     clock = pygame.time.Clock()
@@ -46,20 +49,20 @@ def main():
                     seconds = int(ticks/1000 % 60)
                     print("CLICKED")
                     print(str(seconds - randomRange) + " Second(s), " + str(milliseconds) + " Milliseconds")
+                    time_text = font.render(str(seconds - randomRange) + " Second(s), " + str(milliseconds) + " Milliseconds", False, (0, 0, 0))
                 else:
                     print("CLICKED TOO EARLY")
         
         # Timer text
-        font = pygame.font.SysFont('Arial', 34)
-        time_text = font.render('Reaction Time:' + str(milliseconds), False, (0, 0, 0))
         
         #Stopwatch 
         ticks = pygame.time.get_ticks()
-        draw_window(current_color)
+        draw_window(current_color, time_text)
 
-def draw_window(color):
+def draw_window(color, time_text):
     
     WIN.fill(color)
+    WIN.blit(time_text, (WIDTH/2 - 50, HEIGHT/2))
     pygame.display.update()
     
 if __name__ == "__main__":
