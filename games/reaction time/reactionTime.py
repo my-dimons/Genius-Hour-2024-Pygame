@@ -62,7 +62,7 @@ def main():
 def draw_window(color, time_text):
     
     WIN.fill(color)
-    WIN.blit(time_text, (WIDTH/2 - 50, HEIGHT/2))
+    WIN.blit(time_text, (WIDTH/2 - 350, HEIGHT/2))
     pygame.display.update()
     
 if __name__ == "__main__":
