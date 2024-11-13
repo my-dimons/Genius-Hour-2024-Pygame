@@ -197,3 +197,4 @@ if __name__ == "__main__":
 # (FIX) side border is broken, not properly colliding and is shifted to the left
 # (ADD) Obstacles (cones, other cars, etc.)
 # (CHANGE) change spawn_locations array (~ln 72, near the start of main()) to not use gas can width, make a new variable which is the new standard for objects
+# (CHANGE) update comments to be more clear and be shorter
