@@ -1,5 +1,5 @@
-import pygame
-import math
+from distutils.core import setup
+import py2exe, pygame, math
 pygame.font.init()
 
 #------Vars
