@@ -18,7 +18,9 @@ CHEESE_COLOR = 242, 217, 51
 
 #PIZZA
 PIZZA_RADIUS = 200
-PIZZA_POS = WIDTH/4, HEIGHT/2
+PIZZA_POS_X = WIDTH/4
+PIZZA_POS_Y = HEIGHT/2
+PIZZA_POS = PIZZA_POS_X, PIZZA_POS_Y
 
 #UPGRADES
 MULTIPLIER_ADD = 1
@@ -29,7 +31,12 @@ UPGRADE_HEIGHT = 75
 
 #TOPPINGS
 SAUCE_RADIUS = PIZZA_RADIUS - 15
-CHEESE_RADIUS = PIZZA_RADIUS - 21
+CHEESE_RADIUS = PIZZA_RADIUS - 25
+PEPPERONI_RADIUS = PIZZA_RADIUS - 175
+
+SAUCE_UNLOCKED = False
+CHEESE_UNLOCKED = False
+PEPPERONI_UNLOCKED = False
 
 #CURRANCY
 MONEY = 0 #PEPS IS MAIN CURRANCY
@@ -39,17 +46,25 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("work pls")
 
 def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second): #UPDATE DISPLAY
+    
+
     WIN.fill(BACKGROUND_COLOR)
     #PIZZA
     pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
-    
     #SAUCE
     if toppings_unlocked >= 1:
+        SAUCE_UNLOCKED = True
         pygame.draw.circle(WIN, SAUCE_COLOR, PIZZA_POS, SAUCE_RADIUS)
 
     #CHEESE
     if toppings_unlocked >= 2:
+        CHEESE_UNLOCKED = True
         pygame.draw.circle(WIN, CHEESE_COLOR, PIZZA_POS, CHEESE_RADIUS)
+
+    if toppings_unlocked >= 3:
+        PEPPERONI_UNLOCKED = True
+        pepperoni = [pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80, PIZZA_POS_Y + 70), PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 35, PIZZA_POS_Y - 80), PEPPERONI_RADIUS)]
 
     pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height))
 
@@ -61,7 +76,7 @@ def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_un
 
 def main():
     # Money
-    money = 0
+    money = 3000
     money_muliplier = 1
     multiplier_cost = 10
     money_per_second = 0
