@@ -1,5 +1,5 @@
 from distutils.core import setup
-import py2exe, pygame, math
+import pygame, math, random
 pygame.font.init()
 
 #------Vars
@@ -34,6 +34,16 @@ SAUCE_RADIUS = PIZZA_RADIUS - 15
 CHEESE_RADIUS = PIZZA_RADIUS - 25
 PEPPERONI_RADIUS = PIZZA_RADIUS - 175
 
+PEPPERONI_VARIANCE = [(random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20)), 
+                      (random.randrange(-20, 20), random.randrange(-20, 20))]
+
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
 PEPPERONI_UNLOCKED = False
@@ -45,9 +55,7 @@ MONEY = 0 #PEPS IS MAIN CURRANCY
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("work pls")
 
-def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second): #UPDATE DISPLAY
-    
-
+def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second, random_topping_variance): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
     #PIZZA
     pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
@@ -63,8 +71,15 @@ def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_un
 
     if toppings_unlocked >= 3:
         PEPPERONI_UNLOCKED = True
-        pepperoni = [pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80, PIZZA_POS_Y + 70), PEPPERONI_RADIUS), 
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 35, PIZZA_POS_Y - 80), PEPPERONI_RADIUS)]
+        pepperoni = [pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + random.randrange(-20, 20), PIZZA_POS_Y + 70 + random.randrange(-20, 20)) , PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + random.randrange(-20, 20), PIZZA_POS_Y - 70 + random.randrange(-20, 20)) , PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + random.randrange(-20, 20), PIZZA_POS_Y + 70 + random.randrange(-20, 20)) , PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + random.randrange(-20, 20), PIZZA_POS_Y - 70 + random.randrange(-20, 20)) , PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + random.randrange(-20, 20), PIZZA_POS_Y + 125 + random.randrange(-20, 20)), PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + random.randrange(-20, 20), PIZZA_POS_Y - 125 + random.randrange(-20, 20)), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 125 + random.randrange(-20, 20), PIZZA_POS_Y + random.randrange(-20, 20))      , PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 125 + random.randrange(-20, 20), PIZZA_POS_Y + random.randrange(-20, 20))      , PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + random.randrange(-20, 20), PIZZA_POS_Y + random.randrange(-20, 20))      , PEPPERONI_RADIUS)]
 
     pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height))
 
@@ -82,7 +97,9 @@ def main():
     money_per_second = 0
     money_per_second_count = 0
 
+    # Pizza
     toppings_unlocked = 0
+    topping_random_variance = random.randrange(-20, 20)
     pizza = pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
     upgrade_multiplier = pygame.Rect(WIDTH/2, HEIGHT - HEIGHT/4, UPGRADE_WIDTH, UPGRADE_HEIGHT)
 
@@ -135,7 +152,7 @@ def main():
         money_per_second_text = small_font.render('$ per second: ' + str(int(money_per_second)), False, WHITE)
         upgrade_text = small_font.render('NEXT TOPPING | COST: ' + str(int(multiplier_cost)), False, BLACK)
 
-        draw_window(money_text, upgrade_text, upgrade_multiplier, toppings_unlocked, money_per_second_text)
+        draw_window(money_text, upgrade_text, upgrade_multiplier, toppings_unlocked, money_per_second_text, topping_random_variance)
 
 def clicked_circle(self, radius):
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -151,3 +168,4 @@ if __name__ == "__main__":
 # (CHANGE) Center money text
 # (ADD)    MORE TOPPINGS
 # (ADD)    Money per second buildings
+# (FIX)    Pepperoni needs to have a variation
