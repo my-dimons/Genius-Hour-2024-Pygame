@@ -1,4 +1,3 @@
-from distutils.core import setup
 import pygame, math, random
 pygame.font.init()
 
@@ -10,7 +9,7 @@ FPS = 60
 
 #COLORS
 BLACK = 0, 0, 0
-WHITE = 255, 255, 255
+WHITE = 255, 255, 255 
 BROWN = 245, 222, 179
 BACKGROUND_COLOR = 43, 52, 87
 SAUCE_COLOR = 214, 56, 61
@@ -33,7 +32,7 @@ UPGRADE_HEIGHT = 75
 SAUCE_RADIUS = PIZZA_RADIUS - 15
 CHEESE_RADIUS = PIZZA_RADIUS - 25
 PEPPERONI_RADIUS = PIZZA_RADIUS - 175
-PEPPERONI_VARIANCE_CALCULATED = False
+PEPPERONI_VARIANCE = 20
 
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
@@ -46,63 +45,11 @@ MONEY = 0 #PEPS IS MAIN CURRANCY
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("work pls")
 
-def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second, random_topping_variance): #UPDATE DISPLAY
-    if (PEPPERONI_VARIANCE_CALCULATED == False):
-        pepperoni_variance_x = [(random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20))]
-        pepperoni_variance_y = [(random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20)), 
-                              (random.randrange(-20, 20), random.randrange(-20, 20))]
-        PEPPERONI_VARIANCE_CALCULATED = True
-    WIN.fill(BACKGROUND_COLOR)
-    #PIZZA
-    pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
-    #SAUCE
-    if toppings_unlocked >= 1:
-        SAUCE_UNLOCKED = True
-        pygame.draw.circle(WIN, SAUCE_COLOR, PIZZA_POS, SAUCE_RADIUS)
 
-    #CHEESE
-    if toppings_unlocked >= 2:
-        CHEESE_UNLOCKED = True
-        pygame.draw.circle(WIN, CHEESE_COLOR, PIZZA_POS, CHEESE_RADIUS)
-
-    if toppings_unlocked >= 3:
-        PEPPERONI_UNLOCKED = True
-        pepperoni = [pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + pepperoni_variance_x[0], PIZZA_POS_Y  + 70 + pepperoni_variance_y[0], PEPPERONI_RADIUS)), 
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + pepperoni_variance_x[1], PIZZA_POS_Y  - 70 + pepperoni_variance_y[1], PEPPERONI_RADIUS)),
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + pepperoni_variance_x[2], PIZZA_POS_Y  + 70 + pepperoni_variance_y[2], PEPPERONI_RADIUS)),
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + pepperoni_variance_x[3], PIZZA_POS_Y  - 70 + pepperoni_variance_y[3], PEPPERONI_RADIUS)),
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[4], PIZZA_POS_Y + 125 + pepperoni_variance_y[4], PEPPERONI_RADIUS)), 
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[5], PIZZA_POS_Y - 125 + pepperoni_variance_y[5], PEPPERONI_RADIUS)),
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 125 + pepperoni_variance_x[6], PIZZA_POS_Y       + pepperoni_variance_y[6], PEPPERONI_RADIUS)), 
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 125 + pepperoni_variance_x[7], PIZZA_POS_Y       + pepperoni_variance_y[7], PEPPERONI_RADIUS)),
-                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[8], PIZZA_POS_Y       + pepperoni_variance_y[8], PEPPERONI_RADIUS))]
-
-
-    pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height))
-
-    WIN.blit(money_per_second, (10, 80)) 
-    WIN.blit(money_text, (10, 5))
-    upgrade_text_rect = upgrade_text.get_rect(center=(upgrade_multiplier_button.x + upgrade_text.get_rect().width/2 + 15, upgrade_multiplier_button.y + upgrade_text.get_rect().height))
-    WIN.blit(upgrade_text, upgrade_text_rect)
-    pygame.display.update()
 
 def main():
-    PEPPERONI_VARIANCE_CALCULATED = False
+    pepperoni_variance_x, pepperoni_variance_y = calculate_pepperoni_variance()
+    
     # Money
     money = 3000
     money_muliplier = 1
@@ -165,7 +112,43 @@ def main():
         money_per_second_text = small_font.render('$ per second: ' + str(int(money_per_second)), False, WHITE)
         upgrade_text = small_font.render('NEXT TOPPING | COST: ' + str(int(multiplier_cost)), False, BLACK)
 
-        draw_window(money_text, upgrade_text, upgrade_multiplier, toppings_unlocked, money_per_second_text, topping_random_variance)
+        draw_window(money_text, upgrade_text, upgrade_multiplier, toppings_unlocked, money_per_second_text, pepperoni_variance_x, pepperoni_variance_y)
+
+
+def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second, pepperoni_variance_x, pepperoni_variance_y): #UPDATE DISPLAY
+    WIN.fill(BACKGROUND_COLOR)
+    #PIZZA
+    pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
+    #SAUCE
+    if toppings_unlocked >= 1:
+        SAUCE_UNLOCKED = True
+        pygame.draw.circle(WIN, SAUCE_COLOR, PIZZA_POS, SAUCE_RADIUS)
+
+    #CHEESE
+    if toppings_unlocked >= 2:
+        CHEESE_UNLOCKED = True
+        pygame.draw.circle(WIN, CHEESE_COLOR, PIZZA_POS, CHEESE_RADIUS)
+
+    if toppings_unlocked >= 3:
+        PEPPERONI_UNLOCKED = True
+        pepperoni = [pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + pepperoni_variance_x[0], PIZZA_POS_Y  + 70 + pepperoni_variance_y[0]), PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + pepperoni_variance_x[1], PIZZA_POS_Y  - 70 + pepperoni_variance_y[1]), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 80  + pepperoni_variance_x[2], PIZZA_POS_Y  + 70 + pepperoni_variance_y[2]), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 80  + pepperoni_variance_x[3], PIZZA_POS_Y  - 70 + pepperoni_variance_y[3]), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[4], PIZZA_POS_Y + 125 + pepperoni_variance_y[4]), PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[5], PIZZA_POS_Y - 125 + pepperoni_variance_y[5]), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X + 125 + pepperoni_variance_x[6], PIZZA_POS_Y       + pepperoni_variance_y[6]), PEPPERONI_RADIUS), 
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X - 125 + pepperoni_variance_x[7], PIZZA_POS_Y       + pepperoni_variance_y[7]), PEPPERONI_RADIUS),
+                     pygame.draw.circle(WIN, SAUCE_COLOR, (PIZZA_POS_X       + pepperoni_variance_x[8], PIZZA_POS_Y       + pepperoni_variance_y[8]), PEPPERONI_RADIUS)]
+
+
+    pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height))
+
+    WIN.blit(money_per_second, (10, 80)) 
+    WIN.blit(money_text, (10, 5))
+    upgrade_text_rect = upgrade_text.get_rect(center=(upgrade_multiplier_button.x + upgrade_text.get_rect().width/2 + 15, upgrade_multiplier_button.y + upgrade_text.get_rect().height))
+    WIN.blit(upgrade_text, upgrade_text_rect)
+    pygame.display.update()
 
 def clicked_circle(self, radius):
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -174,6 +157,27 @@ def clicked_circle(self, radius):
     distance = math.sqrt(dx*dx + dy*dy)  # or: distance = math.hypot(dx, dy)
     return distance <= radius
 
+def calculate_pepperoni_variance():
+    pepperoni_variance_x = [(random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE)), 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  ]
+    pepperoni_variance_y = [(random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE)), 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  , 
+                          (random.randrange(-PEPPERONI_VARIANCE, PEPPERONI_VARIANCE))  ]
+    return pepperoni_variance_x, pepperoni_variance_y
+    
 if __name__ == "__main__":
     main()
 
@@ -181,4 +185,4 @@ if __name__ == "__main__":
 # (CHANGE) Center money text
 # (ADD)    MORE TOPPINGS
 # (ADD)    Money per second buildings
-# (FIX)    Pepperoni needs to have a variation
+# (ADD)    MORE COMMENTS
