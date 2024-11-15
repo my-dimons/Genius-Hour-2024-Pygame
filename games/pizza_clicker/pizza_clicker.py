@@ -16,7 +16,7 @@ SAUCE_COLOR = 214, 56, 61
 CHEESE_COLOR = 242, 217, 51
 
 #PIZZA
-PIZZA_RADIUS = 200
+PIZZA_RADIUS = 200 #SCALABLE
 PIZZA_POS = WIDTH/4, HEIGHT/2
 
 #UPGRADES
@@ -29,8 +29,8 @@ UPGRADE_HEIGHT = 75
 #TOPPINGS
 SAUCE_RADIUS = PIZZA_RADIUS - 15
 CHEESE_RADIUS = PIZZA_RADIUS - 25
-PEPPERONI_RADIUS = PIZZA_RADIUS - 175
-TOPPING_VARIANCE = 25
+PEPPERONI_RADIUS = PIZZA_RADIUS/7.5
+TOPPING_VARIANCE = 22
 
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
@@ -58,7 +58,6 @@ def main():
 
     # Pizza
     toppings_unlocked = 0
-    topping_random_variance = random.randrange(-20, 20)
     pizza = pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
     upgrade_multiplier = pygame.Rect(WIDTH/2, HEIGHT - HEIGHT/4, UPGRADE_WIDTH, UPGRADE_HEIGHT)
 
@@ -94,7 +93,7 @@ def main():
                 # Upgrade clicking
                 if upgrade_multiplier.collidepoint(mouse_pos):
                     if(money >= multiplier_cost):
-                        money_muliplier += 1
+                        money_muliplier *= 2.5
                         money -= int(multiplier_cost)
 
                         multiplier_cost *= UPGRADE_COST_INCREASE
@@ -182,16 +181,31 @@ def calculate_topping_variation():
 
 # CHANGE THIS FORMAT FROM CIRCLES -> IMAGES
 def render_variation_toppings(color, x_pos, y_pos, variation, radius):
-    pygame.draw.circle(WIN, color, (x_pos - 80  + variation[0][0], y_pos  + 70 + variation[0][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos + 80  + variation[1][0], y_pos  - 70 + variation[1][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos + 80  + variation[2][0], y_pos  + 70 + variation[2][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos - 80  + variation[3][0], y_pos  - 70 + variation[3][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos       + variation[4][0], y_pos + 125 + variation[4][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos       + variation[5][0], y_pos - 125 + variation[5][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos + 125 + variation[6][0], y_pos       + variation[6][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos - 125 + variation[7][0], y_pos       + variation[7][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos       + variation[8][0], y_pos       + variation[8][1]), radius)
-    
+    corners = PIZZA_RADIUS/1.7
+    edges = PIZZA_RADIUS/2.5
+
+    pygame.draw.circle(WIN, color, (x_pos - edges   + variation[0][0], y_pos  + edges  + variation[0][1]), radius) 
+    pygame.draw.circle(WIN, color, (x_pos + edges   + variation[1][0], y_pos  - edges  + variation[1][1]), radius)
+    pygame.draw.circle(WIN, color, (x_pos + edges   + variation[2][0], y_pos  + edges  + variation[2][1]), radius)
+    pygame.draw.circle(WIN, color, (x_pos - edges   + variation[3][0], y_pos  - edges  + variation[3][1]), radius)
+    pygame.draw.circle(WIN, color, (x_pos           + variation[4][0], y_pos + corners + variation[4][1]), radius) 
+    pygame.draw.circle(WIN, color, (x_pos           + variation[5][0], y_pos - corners + variation[5][1]), radius)
+    pygame.draw.circle(WIN, color, (x_pos + corners + variation[6][0], y_pos           + variation[6][1]), radius) 
+    pygame.draw.circle(WIN, color, (x_pos - corners + variation[7][0], y_pos           + variation[7][1]), radius)
+    pygame.draw.circle(WIN, color, (x_pos           + variation[8][0], y_pos           + variation[8][1]), radius)
+
+# For fun
+def grow_pizza(increment):
+    global PIZZA_RADIUS
+    global SAUCE_RADIUS
+    global CHEESE_RADIUS
+    global PEPPERONI_RADIUS
+
+    PIZZA_RADIUS += increment
+    SAUCE_RADIUS += increment
+    CHEESE_RADIUS += increment
+    PEPPERONI_RADIUS = PIZZA_RADIUS/7.5
+
 if __name__ == "__main__":
     main()
 
