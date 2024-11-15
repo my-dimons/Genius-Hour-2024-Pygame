@@ -80,7 +80,6 @@ def main():
 
     
     # TIMERS
-    
     # Adds score
     SCOREEVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(SCOREEVENT, 1000//5) #1 second = 1000 milliseconds
