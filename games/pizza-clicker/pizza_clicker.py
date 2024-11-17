@@ -29,12 +29,17 @@ UPGRADE_HEIGHT = 75
 #TOPPINGS
 SAUCE_RADIUS = PIZZA_RADIUS - 15
 CHEESE_RADIUS = PIZZA_RADIUS - 25
-PEPPERONI_RADIUS = PIZZA_RADIUS/7.5
-TOPPING_VARIANCE = 22
+
+PEPPERONI_SIZE = 3.5
+PEPPERONI_DIMENSIONS = PIZZA_RADIUS/PEPPERONI_SIZE
+TOPPING_VARIANCE = 18
 
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
 PEPPERONI_UNLOCKED = False
+
+PEPPERONI_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pepperoni.png'))
+PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (PEPPERONI_DIMENSIONS, PEPPERONI_DIMENSIONS))
 
 #CURRANCY
 MONEY = 0 #MAIN CURRANCY
@@ -130,9 +135,24 @@ def main():
                     pepperoni_variation  )
 
 
-def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second, topping_variation): #UPDATE DISPLAY
+def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_unlocked, money_per_second, pepperoni_variation): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
 
+    # Render pizza with toppings
+    render_pizza(toppings_unlocked, pepperoni_variation)
+
+    # Render text
+    WIN.blit(money_per_second, (10, 80)) 
+    WIN.blit(money_text, (10, 5))
+
+    # Render upgrade button
+    pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height)) # upgrade button
+    upgrade_text_rect = upgrade_text.get_rect(center=(upgrade_multiplier_button.x + upgrade_text.get_rect().width/2 + 15, upgrade_multiplier_button.y + upgrade_text.get_rect().height)) # upgrade text
+    WIN.blit(upgrade_text, upgrade_text_rect)
+
+    pygame.display.update()
+
+def render_pizza(toppings_unlocked, pepperoni_variation):
     # PIZZA
     pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
 
@@ -149,18 +169,7 @@ def draw_window(money_text, upgrade_text, upgrade_multiplier_button, toppings_un
     # PEPPERONI
     if toppings_unlocked >= 3:
         PEPPERONI_UNLOCKED = True
-        render_variation_toppings(SAUCE_COLOR, PIZZA_POS[0], PIZZA_POS[1], topping_variation, PEPPERONI_RADIUS)
-
-    # Render text
-    WIN.blit(money_per_second, (10, 80)) 
-    WIN.blit(money_text, (10, 5))
-
-    # Render upgrade button
-    pygame.draw.rect(WIN, WHITE, pygame.Rect(upgrade_multiplier_button.x, upgrade_multiplier_button.y, upgrade_multiplier_button.width, upgrade_multiplier_button.height)) # upgrade button
-    upgrade_text_rect = upgrade_text.get_rect(center=(upgrade_multiplier_button.x + upgrade_text.get_rect().width/2 + 15, upgrade_multiplier_button.y + upgrade_text.get_rect().height)) # upgrade text
-    WIN.blit(upgrade_text, upgrade_text_rect)
-
-    pygame.display.update()
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], pepperoni_variation, PEPPERONI_DIMENSIONS)
 
 def clicked_circle(self, radius):
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -180,31 +189,41 @@ def calculate_topping_variation():
     return variance
 
 # CHANGE THIS FORMAT FROM CIRCLES -> IMAGES
-def render_variation_toppings(color, x_pos, y_pos, variation, radius):
+def render_variation_toppings(x_pos, y_pos, variation, dimensions):
+    x = 0 # doesn't do anything, just a filler for the pepperoni dimensions
     corners = PIZZA_RADIUS/1.7
     edges = PIZZA_RADIUS/2.5
 
-    pygame.draw.circle(WIN, color, (x_pos - edges   + variation[0][0], y_pos  + edges  + variation[0][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos + edges   + variation[1][0], y_pos  - edges  + variation[1][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos + edges   + variation[2][0], y_pos  + edges  + variation[2][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos - edges   + variation[3][0], y_pos  - edges  + variation[3][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos           + variation[4][0], y_pos + corners + variation[4][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos           + variation[5][0], y_pos - corners + variation[5][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos + corners + variation[6][0], y_pos           + variation[6][1]), radius) 
-    pygame.draw.circle(WIN, color, (x_pos - corners + variation[7][0], y_pos           + variation[7][1]), radius)
-    pygame.draw.circle(WIN, color, (x_pos           + variation[8][0], y_pos           + variation[8][1]), radius)
+    # CREATE RECTS
+    topping  = [pygame.Rect(x_pos - edges   + variation[0][0], y_pos  + edges  + variation[0][1], x, x),
+                 pygame.Rect(x_pos + edges   + variation[1][0], y_pos  - edges  + variation[1][1], x, x),
+                 pygame.Rect(x_pos + edges   + variation[2][0], y_pos  + edges  + variation[2][1], x, x),
+                 pygame.Rect(x_pos - edges   + variation[3][0], y_pos  - edges  + variation[3][1], x, x),
+                 pygame.Rect(x_pos           + variation[4][0], y_pos + corners + variation[4][1], x, x),
+                 pygame.Rect(x_pos           + variation[5][0], y_pos - corners + variation[5][1], x, x),
+                 pygame.Rect(x_pos + corners + variation[6][0], y_pos           + variation[6][1], x, x),
+                 pygame.Rect(x_pos - corners + variation[7][0], y_pos           + variation[7][1], x, x),
+                 pygame.Rect(x_pos           + variation[8][0], y_pos           + variation[8][1], x, x)]
+
+    # RENDER
+    for rect in topping:
+        # set the centers
+        rect.x -= dimensions/2
+        rect.y -= dimensions/2
+        WIN.blit(PEPPERONI, rect)
 
 # For fun
 def grow_pizza(increment):
     global PIZZA_RADIUS
     global SAUCE_RADIUS
     global CHEESE_RADIUS
-    global PEPPERONI_RADIUS
+    global PEPPERONI_DIMENSIONS
 
     PIZZA_RADIUS += increment
     SAUCE_RADIUS += increment
     CHEESE_RADIUS += increment
-    PEPPERONI_RADIUS = PIZZA_RADIUS/7.5
+
+    PEPPERONI_DIMENSIONS = PIZZA_RADIUS/7.5
 
 if __name__ == "__main__":
     main()
