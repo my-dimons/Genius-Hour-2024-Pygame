@@ -94,7 +94,7 @@ def main():
                     print(money)
                     print("")
                     print("---MONEY---")
-                    
+
                 # Upgrade clicking
                 if upgrade_multiplier.collidepoint(mouse_pos):
                     if(money >= multiplier_cost):
@@ -196,14 +196,14 @@ def render_variation_toppings(x_pos, y_pos, variation, dimensions):
 
     # CREATE RECTS
     topping  = [pygame.Rect(x_pos - edges   + variation[0][0], y_pos  + edges  + variation[0][1], x, x),
-                 pygame.Rect(x_pos + edges   + variation[1][0], y_pos  - edges  + variation[1][1], x, x),
-                 pygame.Rect(x_pos + edges   + variation[2][0], y_pos  + edges  + variation[2][1], x, x),
-                 pygame.Rect(x_pos - edges   + variation[3][0], y_pos  - edges  + variation[3][1], x, x),
-                 pygame.Rect(x_pos           + variation[4][0], y_pos + corners + variation[4][1], x, x),
-                 pygame.Rect(x_pos           + variation[5][0], y_pos - corners + variation[5][1], x, x),
-                 pygame.Rect(x_pos + corners + variation[6][0], y_pos           + variation[6][1], x, x),
-                 pygame.Rect(x_pos - corners + variation[7][0], y_pos           + variation[7][1], x, x),
-                 pygame.Rect(x_pos           + variation[8][0], y_pos           + variation[8][1], x, x)]
+                pygame.Rect(x_pos + edges   + variation[1][0], y_pos  - edges  + variation[1][1], x, x),
+                pygame.Rect(x_pos + edges   + variation[2][0], y_pos  + edges  + variation[2][1], x, x),
+                pygame.Rect(x_pos - edges   + variation[3][0], y_pos  - edges  + variation[3][1], x, x),
+                pygame.Rect(x_pos           + variation[4][0], y_pos + corners + variation[4][1], x, x),
+                pygame.Rect(x_pos           + variation[5][0], y_pos - corners + variation[5][1], x, x),
+                pygame.Rect(x_pos + corners + variation[6][0], y_pos           + variation[6][1], x, x),
+                pygame.Rect(x_pos - corners + variation[7][0], y_pos           + variation[7][1], x, x),
+                pygame.Rect(x_pos           + variation[8][0], y_pos           + variation[8][1], x, x)]
 
     # RENDER
     for rect in topping:
