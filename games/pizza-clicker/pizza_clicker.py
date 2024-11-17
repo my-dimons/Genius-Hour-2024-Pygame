@@ -33,13 +33,14 @@ CHEESE_RADIUS = PIZZA_RADIUS - 25
 PEPPERONI_SIZE = 3.5
 PEPPERONI_DIMENSIONS = PIZZA_RADIUS/PEPPERONI_SIZE
 TOPPING_VARIANCE = 18
+PEPPERONI_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pepperoni.png'))
+PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (PEPPERONI_DIMENSIONS, PEPPERONI_DIMENSIONS))
 
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
 PEPPERONI_UNLOCKED = False
 
-PEPPERONI_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pepperoni.png'))
-PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (PEPPERONI_DIMENSIONS, PEPPERONI_DIMENSIONS))
+
 
 #CURRANCY
 MONEY = 0 #MAIN CURRANCY
@@ -232,4 +233,3 @@ if __name__ == "__main__":
 # (CHANGE) Center money text
 # (ADD)    MORE TOPPINGS
 # (ADD)    Money per second buildings
-# (CHANGE) Change rendering for pepperoni from circles to images, allowing easy addition of new toppings
