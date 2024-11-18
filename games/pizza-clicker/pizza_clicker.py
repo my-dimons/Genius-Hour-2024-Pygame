@@ -1,3 +1,4 @@
+# MAKE SURE YOU'RE USING PYTHON 3.10+ (add link to how to upgrade python)
 import pygame, os, math, random
 pygame.font.init()
 
