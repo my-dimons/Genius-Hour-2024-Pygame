@@ -201,7 +201,6 @@ def main():
 
             if event.type == pygame.QUIT:
                 run = False
-        grow_pizza(1)
         # Text
         money_per_second_text = small_font.render('$/s: ' + str(int(money_per_second)), False, WHITE)
         money_text = font.render('$' + str(int(money)), False, WHITE)
@@ -389,7 +388,9 @@ def grow_pizza(increment):
     global PIZZA_RADIUS, SAUCE_RADIUS, CHEESE_RADIUS
     global PEPPERONI_DIMENSIONS
 
-    PIZZA_RADIUS, SAUCE_RADIUS, CHEESE_RADIUS += increment, increment, increment
+    PIZZA_RADIUS += increment
+    SAUCE_RADIUS += increment
+    CHEESE_RADIUS += increment
   
     PEPPERONI_DIMENSIONS = PIZZA_RADIUS/7.5
 
