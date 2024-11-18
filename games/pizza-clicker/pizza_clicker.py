@@ -25,7 +25,7 @@ BUTTON_HEIGHT = 75
 # upgrades
 MULTIPLIER_ADD = 1
 UPGRADE_COST = 50
-UPGRADE_COST_INCREASE = 3
+UPGRADE_COST_INCREASE = 5
 
 #$/S BUILDINGS
 BUILDING_PRICE_INCREASE = 1.15
@@ -201,11 +201,11 @@ def main():
 
             if event.type == pygame.QUIT:
                 run = False
+        grow_pizza(1)
         # Text
         money_per_second_text = small_font.render('$/s: ' + str(int(money_per_second)), False, WHITE)
-
         money_text = font.render('$' + str(int(money)), False, WHITE)
-        topping_upgrade_text = small_font.render('Add ' + next_topping(toppings_unlocked) + ' | $ ' + str(int(multiplier_cost)), False, BLACK)
+        topping_upgrade_text = small_font.render(next_topping(toppings_unlocked, multiplier_cost), False, BLACK)
         building_buy_text = [small_font.render('Buy ' + building_buttons[0][1] + ' | $ ' + str(int(pizza_stand_price)), False, BLACK),
                              small_font.render('Buy ' + building_buttons[1][1] + ' | $ ' + str(int(food_truck_price)), False, BLACK),
                              small_font.render('Buy ' + building_buttons[2][1] + ' | $ ' + str(int(pizzeria_price)), False, BLACK),
@@ -360,32 +360,36 @@ def render_variation_toppings(x_pos, y_pos, variation, dimensions):
         rect.y -= dimensions/2
         WIN.blit(PEPPERONI, rect)
 # Get the next topping in the form of a string
-def next_topping(toppings_unlocked):
+def next_topping(toppings_unlocked, multiplier_cost):
     global MAX_TOPPINGS
     next_topping = toppings_unlocked + 1
-    topping = ""
+    topping, add, cost = "", "", ""
+    # CONSTANTS
+    COST = " | $" + str(int(multiplier_cost))
+    ADD = "Add "
 
     match next_topping:
         case 1:
             topping = "Sauce"
+            add, cost = ADD, COST
         case 2:
             topping = "Cheese"
+            add, cost = ADD, COST
         case 3:
             topping = "Pepperoni"
+            add, cost = ADD, COST
         case _:
-            topping = "ERROR"
+            topping = "MAX UPGRADES"
+            add = ""
+            cost = ""
 
-    return topping        
+    return str(add + topping + cost)
 # For fun
 def grow_pizza(increment):
-    global PIZZA_RADIUS
-    global SAUCE_RADIUS
-    global CHEESE_RADIUS
+    global PIZZA_RADIUS, SAUCE_RADIUS, CHEESE_RADIUS
     global PEPPERONI_DIMENSIONS
 
-    PIZZA_RADIUS += increment
-    SAUCE_RADIUS += increment
-    CHEESE_RADIUS += increment
+    PIZZA_RADIUS, SAUCE_RADIUS, CHEESE_RADIUS += increment, increment, increment
   
     PEPPERONI_DIMENSIONS = PIZZA_RADIUS/7.5
 
