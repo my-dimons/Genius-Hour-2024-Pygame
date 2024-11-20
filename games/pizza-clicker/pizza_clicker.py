@@ -54,18 +54,21 @@ SAUCE_RADIUS = PIZZA_RADIUS - 15
 # cheese
 CHEESE_RADIUS = PIZZA_RADIUS - 25
 # pepperoni
-PEPPERONI_SIZE = 3.5
-PEPPERONI_DIMENSIONS = PIZZA_RADIUS/PEPPERONI_SIZE
-TOPPING_VARIANCE = 18
+TOPPING_SIZE = 3.5
+TOPPING_DIMENSIONS = PIZZA_RADIUS/TOPPING_SIZE
+TOPPING_VARIANCE = 25
 PEPPERONI_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pepperoni.png'))
-PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (PEPPERONI_DIMENSIONS, PEPPERONI_DIMENSIONS))
+PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
+MUSHROOM_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'mushroom.png'))
+MUSHROOM = pygame.transform.scale(MUSHROOM_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
 # mushrooms
 #nothin here yet
 
 SAUCE_UNLOCKED = False
 CHEESE_UNLOCKED = False
 PEPPERONI_UNLOCKED = False
-MAX_TOPPINGS = 3 # count all the toppings
+MUSHROOM_UNOCKED = False
+MAX_TOPPINGS = 4 # count all the toppings
 
 
 #CURRANCY
@@ -81,6 +84,7 @@ def main():
     get_global_buildings()
     # Calculate all the topping variation
     pepperoni_variation = calculate_topping_variation()
+    mushroom_variation = calculate_topping_variation()
     # Buildings
     building_buttons = [(PIZZA_STAND_BUTTON, "Pizza Stand"),
                  (FOOD_TRUCK_BUTTON, "Food Truck"),
@@ -94,23 +98,23 @@ def main():
     pizza_stand_money = 1
     food_trucks_owned = 0
     food_truck_price = FOOD_TRUCK_BASE_PRICE
-    food_truck_money = 10
+    food_truck_money = 15
     pizzerias_owned = 0
     pizzeria_price = PIZZERIA_BASE_PRICE
-    pizzeria_money = 50
+    pizzeria_money = 150
     theme_parks_owned = 0
     theme_park_price = THEME_PARK_BASE_PRICE
-    theme_park_money = 350
+    theme_park_money = 1000
     space_stations_owned = 0
     space_station_price = SPACE_STATION_BASE_PRICE
-    space_station_money = 1500
+    space_station_money = 5000
     pizza_dimensions_owned = 0
     pizza_dimension_price = PIZZA_DIMENSION_BASE_PRICE
-    pizza_dimension_money = 4000
+    pizza_dimension_money = 40000
     #Building Variables
 
     # Money
-    money = 3000
+    money = 3000000
     money_muliplier = 1
     multiplier_cost = 10
     money_per_second = 0
@@ -225,7 +229,8 @@ def main():
                     pepperoni_variation,
                     building_buy_text,
                     building_buttons,
-                    buildings_owned_text)
+                    buildings_owned_text,
+                    mushroom_variation)
 
 def buy_building(owned, price, money):
     global BUILDING_PRICE_INCREASE
@@ -239,11 +244,11 @@ def buy_building(owned, price, money):
         print("NOT ENOUGH MONEY")
         return owned, price, money
 
-def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, pepperoni_variation, building_text, buildings, buildings_owned_text): #UPDATE DISPLAY
+def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, pepperoni_variation, building_text, buildings, buildings_owned_text, mushroom_variation): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
 
     # Render pizza with toppings
-    render_pizza(toppings_unlocked, pepperoni_variation)
+    render_pizza(toppings_unlocked, pepperoni_variation, mushroom_variation)
 
     # Render text
     WIN.blit(money_per_second, (10, 80)) 
@@ -307,7 +312,7 @@ def get_global_buildings():
     global PIZZA_DIMENSION_BASE_PRICE
     global PIZZA_DIMENSION_BUTTON
 
-def render_pizza(toppings_unlocked, pepperoni_variation):
+def render_pizza(toppings_unlocked, pepperoni_variation, mushroom_variation):
     # PIZZA
     pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
 
@@ -324,20 +329,23 @@ def render_pizza(toppings_unlocked, pepperoni_variation):
     # PEPPERONI
     if toppings_unlocked >= 3:
         PEPPERONI_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], pepperoni_variation, PEPPERONI_DIMENSIONS)
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], pepperoni_variation, TOPPING_DIMENSIONS, PEPPERONI)
+
+    # MUSHROOM
+    if toppings_unlocked >= 4:
+        MUSHROOM_UNOCKED = True
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], mushroom_variation, TOPPING_DIMENSIONS, MUSHROOM)
 # Uses an array of turples to calculate the individual amount of variance for a topping
 def calculate_topping_variation():
     i = 0
     variance = []
-    image_rotation = []
     while i < 10:
-        variance.append([random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE), random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE)])
-        image_rotation.append(pygame.transform.rotate(PEPPERONI, random.randrange(0, 360)))
+        variance.append([random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE), random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE), random.randrange(0, 360)])
         i += 1
 
     return variance
 # CHANGE THIS FORMAT FROM CIRCLES -> IMAGES
-def render_variation_toppings(x_pos, y_pos, variation, dimensions):
+def render_variation_toppings(x_pos, y_pos, variation, dimensions, image):
     x = 0 # doesn't do anything, just a filler for the pepperoni dimensions
     i = 0
     corners = PIZZA_RADIUS/1.7
@@ -359,7 +367,7 @@ def render_variation_toppings(x_pos, y_pos, variation, dimensions):
         # set the centers
         rect.x -= dimensions/2
         rect.y -= dimensions/2
-        WIN.blit(pygame.transform.rotate(variation[i][0][0], rect))
+        WIN.blit(pygame.transform.rotate(image, variation[i][2]), (rect.x, rect.y))
         i += 1
 # Get the next topping in the form of a string
 def next_topping(toppings_unlocked, multiplier_cost):
@@ -380,6 +388,9 @@ def next_topping(toppings_unlocked, multiplier_cost):
         case 3:
             topping = "Pepperoni"
             add, cost = ADD, COST
+        case 4:
+            topping = "Mushroom"
+            add, cost = ADD, COST
         case _:
             topping = "MAX UPGRADES"
             add = ""
@@ -389,13 +400,13 @@ def next_topping(toppings_unlocked, multiplier_cost):
 # For fun
 def grow_pizza(increment):
     global PIZZA_RADIUS, SAUCE_RADIUS, CHEESE_RADIUS
-    global PEPPERONI_DIMENSIONS
+    global TOPPING_DIMENSIONS
 
     PIZZA_RADIUS += increment
     SAUCE_RADIUS += increment
     CHEESE_RADIUS += increment
   
-    PEPPERONI_DIMENSIONS = PIZZA_RADIUS/7.5
+    TOPPING_DIMENSIONS = PIZZA_RADIUS/7.5
 
 def clicked_circle(self, radius):
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -410,7 +421,6 @@ if __name__ == "__main__":
 # TODO
 # (CHANGE) Center money text
 # (ADD)    MORE TOPPINGS
-# (ADD)    Text below the buy building text that shows how many buildings you own
 
 # TOPPINGS LIST
 # Mushrooms
