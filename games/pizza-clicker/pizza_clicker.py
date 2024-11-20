@@ -1,4 +1,3 @@
-# MAKE SURE YOU'RE USING PYTHON 3.10+ (add link to how to upgrade python)
 import pygame, os, math, random
 pygame.font.init()
 
@@ -82,7 +81,6 @@ def main():
     get_global_buildings()
     # Calculate all the topping variation
     pepperoni_variation = calculate_topping_variation()
-    
     # Buildings
     building_buttons = [(PIZZA_STAND_BUTTON, "Pizza Stand"),
                  (FOOD_TRUCK_BUTTON, "Food Truck"),
@@ -331,14 +329,17 @@ def render_pizza(toppings_unlocked, pepperoni_variation):
 def calculate_topping_variation():
     i = 0
     variance = []
+    image_rotation = []
     while i < 10:
         variance.append([random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE), random.randrange(-TOPPING_VARIANCE, TOPPING_VARIANCE)])
+        image_rotation.append(pygame.transform.rotate(PEPPERONI, random.randrange(0, 360)))
         i += 1
 
     return variance
 # CHANGE THIS FORMAT FROM CIRCLES -> IMAGES
 def render_variation_toppings(x_pos, y_pos, variation, dimensions):
     x = 0 # doesn't do anything, just a filler for the pepperoni dimensions
+    i = 0
     corners = PIZZA_RADIUS/1.7
     edges = PIZZA_RADIUS/2.5
 
@@ -358,7 +359,8 @@ def render_variation_toppings(x_pos, y_pos, variation, dimensions):
         # set the centers
         rect.x -= dimensions/2
         rect.y -= dimensions/2
-        WIN.blit(PEPPERONI, rect)
+        WIN.blit(pygame.transform.rotate(variation[i][0][0], rect))
+        i += 1
 # Get the next topping in the form of a string
 def next_topping(toppings_unlocked, multiplier_cost):
     global MAX_TOPPINGS
