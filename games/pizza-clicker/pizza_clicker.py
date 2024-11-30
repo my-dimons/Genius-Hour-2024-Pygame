@@ -25,27 +25,27 @@ BUTTON_HEIGHT = 75
 # upgrades
 UPGRADE_COST = 100
 MULTIPLIER_ADD = 1
-UPGRADE_COST_INCREASE = 5
+UPGRADE_COST_INCREASE = 10
 
 #$/S BUILDINGS
-BUILDING_PRICE_INCREASE = 1.15
+BUILDING_PRICE_INCREASE = 1.2
 # pizza stand
 PIZZA_STAND_BASE_PRICE = 25
 PIZZA_STAND_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 0 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 # food truck
-FOOD_TRUCK_BASE_PRICE = 500
+FOOD_TRUCK_BASE_PRICE = 250
 FOOD_TRUCK_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 1 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 # pizzeria
-PIZZERIA_BASE_PRICE = 2500
+PIZZERIA_BASE_PRICE = 8000
 PIZZERIA_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 2 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 # theme park
-THEME_PARK_BASE_PRICE = 20000
+THEME_PARK_BASE_PRICE = 100000
 THEME_PARK_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 3 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 # space station
-SPACE_STATION_BASE_PRICE = 500000
+SPACE_STATION_BASE_PRICE = 1000000
 SPACE_STATION_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 4 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 # pizza dimension
-PIZZA_DIMENSION_BASE_PRICE = 1000000
+PIZZA_DIMENSION_BASE_PRICE = 1000000000
 PIZZA_DIMENSION_BUTTON = pygame.Rect(WIDTH/2, HEIGHT/8 * 5 + 40, BUTTON_WIDTH, BUTTON_HEIGHT)
 
 #TOPPINGS
@@ -65,13 +65,10 @@ MUSHROOM_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'asset
 MUSHROOM = pygame.transform.scale(MUSHROOM_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
 # olives
 OLIVES_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'olives.png'))
-OLIVES = pygame.transform.scale(OLIVES_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
-# pineapple
-PINEAPPLE_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pineapple.png'))
-PINEAPPLE = pygame.transform.scale(PINEAPPLE_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
+OLIVES = pygame.transform.scale(OLIVES_IMAGE, (TOPPING_DIMENSIONS/2, TOPPING_DIMENSIONS/2))
 # tomato
 TOMATO_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'tomato.png'))
-TOMATO = pygame.transform.scale(TOMATO_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
+TOMATO = pygame.transform.scale(TOMATO_IMAGE, (TOPPING_DIMENSIONS/1.5, TOPPING_DIMENSIONS/1.5))
 # basil
 BASIL_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'basil.png'))
 BASIL = pygame.transform.scale(BASIL_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
@@ -84,32 +81,25 @@ CHEESE_UNLOCKED = False
 PEPPERONI_UNLOCKED = False
 MUSHROOM_UNOCKED = False
 OLIVES_UNLOCKED = False
-PINEAPPLE_UNLOCKED = False
 TOMATO_UNLOCKED = False
-BASIL_UNLOCKED = False
-SHRIMP_UNLOCKED = False
-MAX_TOPPINGS = 9 # count all the toppings
 
 
 #CURRANCY
-MONEY = 0 #MAIN CURRANCY
+MONEY = 0.0 #MAIN CURRANCY
 
 # ---Vars---
 
 #DISPLAY
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("work pls")
+pygame.display.set_caption("Pizza Clicker")
 
 def main():
     get_global_buildings()
     # Calculate all the topping variation
-    pepperoni_variation = calculate_topping_variation()
-    mushroom_variation = calculate_topping_variation()
-    olive_variation = calculate_topping_variation()
-    pineapple_variation = calculate_topping_variation()
-    tomato_variation = calculate_topping_variation()
-    basil_variation = calculate_topping_variation()
-    shrimp_variation = calculate_topping_variation()
+    variation = [calculate_topping_variation(),
+                 calculate_topping_variation(),
+                 calculate_topping_variation(),
+                 calculate_topping_variation()]
     # Buildings
     building_buttons = [(PIZZA_STAND_BUTTON, "Pizza Stand"),
                  (FOOD_TRUCK_BUTTON, "Food Truck"),
@@ -120,29 +110,30 @@ def main():
     #Building Variables
     pizza_stands_owned = 0
     pizza_stand_price = PIZZA_STAND_BASE_PRICE
-    pizza_stand_money = 1
+    pizza_stand_money = 0.25
     food_trucks_owned = 0
     food_truck_price = FOOD_TRUCK_BASE_PRICE
-    food_truck_money = 15
+    food_truck_money = 2
     pizzerias_owned = 0
     pizzeria_price = PIZZERIA_BASE_PRICE
-    pizzeria_money = 150
+    pizzeria_money = 6
     theme_parks_owned = 0
     theme_park_price = THEME_PARK_BASE_PRICE
-    theme_park_money = 1000
+    theme_park_money = 25
     space_stations_owned = 0
     space_station_price = SPACE_STATION_BASE_PRICE
-    space_station_money = 5000
+    space_station_money = 50
     pizza_dimensions_owned = 0
     pizza_dimension_price = PIZZA_DIMENSION_BASE_PRICE
-    pizza_dimension_money = 40000
+    pizza_dimension_money = 50000
     #Building Variables
 
     # Money
     money = MONEY
     money_muliplier = 1
+    upgrade = 1
     multiplier_cost = UPGRADE_COST
-    money_per_second = 0
+    money_per_second = 0.0
     money_per_second_count = 0
 
     # Pizza
@@ -159,6 +150,8 @@ def main():
     money_per_second_timer = pygame.USEREVENT + 1
     pygame.time.set_timer(money_per_second_timer , money_per_second_interval)
 
+    pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money = update_building_money(pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money, upgrade)
+    
     run = True
     clock = pygame.time.Clock()
     while run:
@@ -183,8 +176,10 @@ def main():
                 if upgrade_multiplier_button.collidepoint(mouse_pos):
                     if money >= multiplier_cost:
                         money_muliplier *= 2.5
+                        upgrade *= 2
                         money -= int(multiplier_cost)
-
+                        pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money = update_building_money(pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money, upgrade)
+        
                         multiplier_cost *= UPGRADE_COST_INCREASE
                         int(multiplier_cost)
 
@@ -230,37 +225,40 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
         # Text
-        money_per_second_text = small_font.render('$/s: ' + str(int(money_per_second)), False, WHITE)
-        money_text = font.render('$' + str(int(money)), False, WHITE)
+        money_per_second_text = small_font.render('$/s: ' + str(round(money_per_second, 1)), False, WHITE)
+        money_text = font.render('$' + str(round(money, 1)), False, WHITE)
         topping_upgrade_text = small_font.render(buy_next_topping_text(toppings_unlocked, multiplier_cost), False, BLACK)
-        building_buy_text = [small_font.render('Buy ' + building_buttons[0][1] + ' | $ ' + str(int(pizza_stand_price)), False, BLACK),
-                             small_font.render('Buy ' + building_buttons[1][1] + ' | $ ' + str(int(food_truck_price)), False, BLACK),
-                             small_font.render('Buy ' + building_buttons[2][1] + ' | $ ' + str(int(pizzeria_price)), False, BLACK),
-                             small_font.render('Buy ' + building_buttons[3][1] + ' | $ ' + str(int(theme_park_price)), False, BLACK),
-                             small_font.render('Buy ' + building_buttons[4][1] + ' | $ ' + str(int(space_station_price)), False, BLACK),
-                             small_font.render('Buy ' + building_buttons[5][1] + ' | $ ' + str(int(pizza_dimension_price)), False, BLACK)]
+        building_buy_text = [small_font.render(building_buttons[0][1] + ' | $ ' + str(round(pizza_stand_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[1][1] + ' | $ ' + str(round(food_truck_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[2][1] + ' | $ ' + str(round(pizzeria_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[3][1] + ' | $ ' + str(round(theme_park_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[4][1] + ' | $ ' + str(round(space_station_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[5][1] + ' | $ ' + str(round(pizza_dimension_price, 1)), False, BLACK)]
         buildings_owned_text = [super_small_font.render('Owned ' + str(pizza_stands_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(food_trucks_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(pizzerias_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(theme_parks_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(space_stations_owned) , False, BLACK),
-                                super_small_font.render('Owned ' + str(pizza_dimensions_owned) , False, BLACK)]
+                                super_small_font.render('Owned ' + str(pizza_dimensions_owned) , False, BLACK)]        
+        building_money_per_second_text = [super_small_font.render('+' + str(round(pizza_stand_money, 1)) + ' $/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(food_truck_money, 1)) + ' $/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(pizzeria_money, 1)) + ' $/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(theme_park_money, 1)) + ' $/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(space_station_money, 1)) + ' $/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(pizza_dimension_money, 1)) + ' $/s', False, BLACK)]
+        
+        
         
         draw_window(money_text,
                     topping_upgrade_text, 
                     upgrade_multiplier_button, 
                     toppings_unlocked,
                     money_per_second_text, 
-                    pepperoni_variation,
+                    variation,
                     building_buy_text,
                     building_buttons,
                     buildings_owned_text,
-                    mushroom_variation,
-                    olive_variation,
-                    pineapple_variation,
-                    tomato_variation,
-                    basil_variation,
-                    shrimp_variation)
+                    building_money_per_second_text)
 
 def buy_building(owned, price, money):
     global BUILDING_PRICE_INCREASE
@@ -274,17 +272,17 @@ def buy_building(owned, price, money):
         print("NOT ENOUGH MONEY")
         return owned, price, money
 
-def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, pepperoni_variation, building_text, buildings, buildings_owned_text, mushroom_variation, olive_variation, pineapple_variation, tomato_variation, basil_variation, shrimp_variation): #UPDATE DISPLAY
+def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, variation, building_text, buildings, buildings_owned_text, building_money_per_second_text): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
 
     # Render pizza with toppings
-    render_pizza(toppings_unlocked, pepperoni_variation, mushroom_variation, olive_variation, pineapple_variation, tomato_variation, basil_variation, shrimp_variation)
+    render_pizza(toppings_unlocked, variation)
 
     # Render text
     WIN.blit(money_per_second, (10, 80)) 
     WIN.blit(money_text, (10, 5))
 
-    render_building_buttons(building_text, buildings_owned_text, buildings)
+    render_building_buttons(building_text, buildings_owned_text, building_money_per_second_text, buildings)
 
     # Render upgrade button
     pygame.draw.rect(WIN, WHITE, pygame.Rect(button.x, button.y, button.width, button.height)) # upgrade button
@@ -316,15 +314,17 @@ def calculate_money_per_second(pizza_stands_owned,
     return money_per_second
 
 # Renders all the buttons for $/s buildings
-def render_building_buttons(text, owned, building_buttons):
+def render_building_buttons(text, owned, money, building_buttons):
     get_global_buildings()
     i = 0
     for button in building_buttons:
         pygame.draw.rect(WIN, WHITE, button[0])
         text_rect = text[i].get_rect(center=(button[0].x + text[i].get_rect().width/2 + 15, button[0].y + text[i].get_rect().height))
         owned_rect = owned[i].get_rect(center=(button[0].x + owned[i].get_rect().width/2 + 15, button[0].y + owned[i].get_rect().height + button[0].height/2 + 4))
+        money_rect = owned[i].get_rect(center=(button[0].x + owned[i].get_rect().width/2 + 110, button[0].y + owned[i].get_rect().height + button[0].height/2 + 4))
         WIN.blit(owned[i], owned_rect)
         WIN.blit(text[i], text_rect)
+        WIN.blit(money[i], money_rect)
         i += 1
     i = 0
 
@@ -342,7 +342,7 @@ def get_global_buildings():
     global PIZZA_DIMENSION_BASE_PRICE
     global PIZZA_DIMENSION_BUTTON
 
-def render_pizza(toppings_unlocked, pepperoni_variation, mushroom_variation, olive_variation, pineapple_variation, tomato_variation, basil_variation, shrimp_variation):
+def render_pizza(toppings_unlocked, variation):
     # PIZZA
     pygame.draw.circle(WIN, BROWN, PIZZA_POS, PIZZA_RADIUS)
 
@@ -359,37 +359,22 @@ def render_pizza(toppings_unlocked, pepperoni_variation, mushroom_variation, oli
     # PEPPERONI
     if toppings_unlocked >= 3:
         PEPPERONI_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], pepperoni_variation, TOPPING_DIMENSIONS, PEPPERONI)
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], variation[0], TOPPING_DIMENSIONS, PEPPERONI)
 
     # MUSHROOM
     if toppings_unlocked >= 4:
         MUSHROOM_UNOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], mushroom_variation, TOPPING_DIMENSIONS, MUSHROOM)
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], variation[1], TOPPING_DIMENSIONS, MUSHROOM)
     
     # OLIVES
     if toppings_unlocked >= 5:
         OLIVES_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], olive_variation, TOPPING_DIMENSIONS, OLIVES)
-
-    # PINEAPPLE
-    if toppings_unlocked >= 6:
-        PINEAPPLE_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], pineapple_variation, TOPPING_DIMENSIONS, PINEAPPLE)
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], variation[2], TOPPING_DIMENSIONS, OLIVES)
 
     # TOMATO
-    if toppings_unlocked >= 7:
+    if toppings_unlocked >= 6:
         OLIVES_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], tomato_variation, TOPPING_DIMENSIONS, TOMATO)
-
-    # BASIL
-    if toppings_unlocked >= 8:
-        BASIL_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], basil_variation, TOPPING_DIMENSIONS, BASIL)
-
-    # SHRIMP
-    if toppings_unlocked >= 9:
-        SHRIMP_UNLOCKED = True
-        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], shrimp_variation, TOPPING_DIMENSIONS, SHRIMP)
+        render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], variation[3], TOPPING_DIMENSIONS, TOMATO)
 
 
 # Uses an array of turples to calculate the individual amount of variance for a topping
@@ -428,7 +413,6 @@ def render_variation_toppings(x_pos, y_pos, variation, dimensions, image):
         i += 1
 # Get the next topping in the form of a string
 def buy_next_topping_text(toppings_unlocked, multiplier_cost):
-    global MAX_TOPPINGS
     next_topping = toppings_unlocked + 1
     topping, add, cost = "", "", ""
     # CONSTANTS
@@ -452,16 +436,7 @@ def buy_next_topping_text(toppings_unlocked, multiplier_cost):
             topping = "Olive"
             add, cost = ADD, COST
         case 6:
-            topping = "Pineapple"
-            add, cost = ADD, COST
-        case 7:
             topping = "Tomato"
-            add, cost = ADD, COST
-        case 8:
-            topping = "Basil"
-            add, cost = ADD, COST
-        case 9:
-            topping = "Shrimp"
             add, cost = ADD, COST
         case _:
             topping = "Upgrade"
@@ -479,6 +454,16 @@ def grow_pizza(increment):
   
     TOPPING_DIMENSIONS = PIZZA_RADIUS/7.5
 
+def update_building_money(pizza_stand, food_truck, pizzeria, theme_park, space_station, dimension, upgrade):
+    if upgrade < 50:
+        pizza_stand *= upgrade
+        food_truck *= upgrade
+        pizzeria *= upgrade
+        theme_park *= upgrade
+        space_station *= upgrade
+        dimension *= upgrade
+    return pizza_stand, food_truck, pizzeria, theme_park, space_station, dimension
+
 def clicked_circle(self, radius):
     mouse_x, mouse_y = pygame.mouse.get_pos()
     dx = mouse_x - self.centerx
@@ -491,17 +476,8 @@ if __name__ == "__main__":
 
 # TODO
 # (CHANGE) Center money text
-# (CHANGE) topping variation should be a single array
-
-# TOPPINGS LIST
-# Mushrooms
-# Olives
-# Tomatoes
-# Spinach
-# Pineapple
-# Basil
-# Garlic
-# Shrimp
+# (ADD)    Rebirths/Prestige (very simple)
+# (ADD)    Goal text (goal is to crash the game)
 
 # BUILDINGS LIST
 # Pizza Stand
@@ -517,7 +493,4 @@ if __name__ == "__main__":
 # Pepperoni: https://www.svgrepo.com/svg/417228/pepperoni
 # Olives: https://www.svgrepo.com/svg/417247/black-olives
 # Mushroom: https://www.svgrepo.com/svg/417230/mushrooms
-# Pineapple: https://www.svgrepo.com/svg/417232/pineapple
 # Tomatos: https://nohat.cc/f/related-cut-tomato-clipart-tomato-slice-free-vector/m2i8d3N4N4m2K9Z5-202208020011.html
-# Basil: https://www.vectorstock.com/royalty-free-vector/flat-basil-icon-vector-35770288
-# Shrimp: https://www.svgrepo.com/svg/154254/shrimp
