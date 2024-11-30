@@ -478,6 +478,7 @@ if __name__ == "__main__":
 # (CHANGE) Center money text
 # (ADD)    Rebirths/Prestige (very simple)
 # (ADD)    Goal text (goal is to crash the game)
+# (CHANGE) Buttons to fade out to gray when they cannot be clicked
 
 # BUILDINGS LIST
 # Pizza Stand
