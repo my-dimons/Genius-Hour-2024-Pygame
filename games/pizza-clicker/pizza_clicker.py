@@ -128,6 +128,14 @@ def main():
     pizza_dimension_money = 50000
     #Building Variables
 
+
+    #Button
+    buttonColors = {
+            'normal': '#ffffff',
+            'hover': '#666666',
+            'pressed': '#333333',
+        }
+
     # Money
     money = MONEY
     money_muliplier = 1
@@ -228,24 +236,24 @@ def main():
         money_per_second_text = small_font.render('$/s: ' + str(round(money_per_second, 1)), False, WHITE)
         money_text = font.render('$' + str(round(money, 1)), False, WHITE)
         topping_upgrade_text = small_font.render(buy_next_topping_text(toppings_unlocked, multiplier_cost), False, BLACK)
-        building_buy_text = [small_font.render(building_buttons[0][1] + ' | $ ' + str(round(pizza_stand_price, 1)), False, BLACK),
-                             small_font.render(building_buttons[1][1] + ' | $ ' + str(round(food_truck_price, 1)), False, BLACK),
-                             small_font.render(building_buttons[2][1] + ' | $ ' + str(round(pizzeria_price, 1)), False, BLACK),
-                             small_font.render(building_buttons[3][1] + ' | $ ' + str(round(theme_park_price, 1)), False, BLACK),
-                             small_font.render(building_buttons[4][1] + ' | $ ' + str(round(space_station_price, 1)), False, BLACK),
-                             small_font.render(building_buttons[5][1] + ' | $ ' + str(round(pizza_dimension_price, 1)), False, BLACK)]
+        building_buy_text = [small_font.render(building_buttons[0][1] + ' | $' + str(round(pizza_stand_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[1][1] + ' | $' + str(round(food_truck_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[2][1] + ' | $' + str(round(pizzeria_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[3][1] + ' | $' + str(round(theme_park_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[4][1] + ' | $' + str(round(space_station_price, 1)), False, BLACK),
+                             small_font.render(building_buttons[5][1] + ' | $' + str(round(pizza_dimension_price, 1)), False, BLACK)]
         buildings_owned_text = [super_small_font.render('Owned ' + str(pizza_stands_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(food_trucks_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(pizzerias_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(theme_parks_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(space_stations_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(pizza_dimensions_owned) , False, BLACK)]        
-        building_money_per_second_text = [super_small_font.render('+' + str(round(pizza_stand_money, 1)) + ' $/s', False, BLACK),
-                                          super_small_font.render('+' + str(round(food_truck_money, 1)) + ' $/s', False, BLACK),
-                                          super_small_font.render('+' + str(round(pizzeria_money, 1)) + ' $/s', False, BLACK),
-                                          super_small_font.render('+' + str(round(theme_park_money, 1)) + ' $/s', False, BLACK),
-                                          super_small_font.render('+' + str(round(space_station_money, 1)) + ' $/s', False, BLACK),
-                                          super_small_font.render('+' + str(round(pizza_dimension_money, 1)) + ' $/s', False, BLACK)]
+        building_money_per_second_text = [super_small_font.render('+' + str(round(pizza_stand_money, 1)) + '$/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(food_truck_money, 1)) + '$/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(pizzeria_money, 1)) + '$/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(theme_park_money, 1)) + '$/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(space_station_money, 1)) + '$/s', False, BLACK),
+                                          super_small_font.render('+' + str(round(pizza_dimension_money, 1)) + '$/s', False, BLACK)]
         
         
         
@@ -376,7 +384,6 @@ def render_pizza(toppings_unlocked, variation):
         OLIVES_UNLOCKED = True
         render_variation_toppings(PIZZA_POS[0], PIZZA_POS[1], variation[3], TOPPING_DIMENSIONS, TOMATO)
 
-
 # Uses an array of turples to calculate the individual amount of variance for a topping
 def calculate_topping_variation():
     i = 0
@@ -479,6 +486,10 @@ if __name__ == "__main__":
 # (ADD)    Rebirths/Prestige (very simple)
 # (ADD)    Goal text (goal is to crash the game)
 # (CHANGE) Buttons to fade out to gray when they cannot be clicked
+# (CHANGE) Balance midgame
+# (CHANGE) make the topping button stand out (make it a little bit of a different color)
+# (ADD)    hover & click animation on buttons
+# (ADD)    Animations/interactions when clicking a button/pizza
 
 # BUILDINGS LIST
 # Pizza Stand
