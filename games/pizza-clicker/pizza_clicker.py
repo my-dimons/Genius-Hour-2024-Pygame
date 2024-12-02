@@ -173,7 +173,7 @@ def main():
                 if(clicked_circle(pizza, PIZZA_RADIUS)):
                     pizza_pressed = True
                     grow_pizza(-PIZZA_PRESS_GROWTH)
-                    add_money = int(1 * money_muliplier)
+                    add_money = int((1 * money_muliplier) * (money_per_second/200 + 1))
                     money += add_money
                     
                     print("---MONEY---")
