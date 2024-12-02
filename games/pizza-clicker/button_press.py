@@ -1,5 +1,5 @@
-import pygame # MAKE SURE PYGAME IS INSTALLED
-
+import pygame, humanize # MAKE SURE PYGAME IS INSTALLED
+print(humanize.intword("1234000", "%0.3f"))
 # INFO: THIS SCRIPT WAS MADE TO TEST HOW PRESSSING A BUTTON WORKS
 
 # CLIENT

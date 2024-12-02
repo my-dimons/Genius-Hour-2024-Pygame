@@ -77,13 +77,13 @@ MUSHROOM_UNOCKED = False
 OLIVES_UNLOCKED = False
 TOMATO_UNLOCKED = False
 
-PIZZA_PRESS_GROWTH = 4
+PIZZA_PRESS_GROWTH = 12
 
 
 # currency abbreviations
 
 #CURRANCY
-MONEY = 9999999999.0 #MAIN CURRANCY
+MONEY = 999999.0 #MAIN CURRANCY
 
 
 # ---Vars---
@@ -143,7 +143,7 @@ def main():
     upgrade = 1
     multiplier_cost = UPGRADE_COST
     money_per_second = 0.0
-    money_per_second_count = 0
+    money_per_second_count = 0.0
 
     # Pizza
     pizza_pressed = False
@@ -169,7 +169,7 @@ def main():
         for event in pygame.event.get():
             mouse_pos = pygame.mouse.get_pos()
             # ON CLICK
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 # Add money
                 if(clicked_circle(pizza, PIZZA_RADIUS)):
                     pizza_pressed = True
@@ -248,7 +248,7 @@ def main():
                                                               pizza_dimension_money)
                 #endregion
             # changes the color of the buttons to normal
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if pizza_pressed:
                     pizza_pressed = False
                     grow_pizza(PIZZA_PRESS_GROWTH)
@@ -327,8 +327,8 @@ def main():
             button_color[6] = unavailable_color
         #endregion 
         # Text
-        money_per_second_text = small_font.render('+' + humanize.intword(money_per_second) + '$/s' , False, WHITE)
-        money_text = font.render('$' + humanize.intword(money), False, WHITE)
+        money_per_second_text = small_font.render('+' + humanize.intword(money_per_second, "%0.2f") + '$/s' , False, WHITE)
+        money_text = font.render('$' + humanize.intword(money, "%0.2f"), False, WHITE)
         topping_upgrade_text = small_font.render(buy_next_topping_text(toppings_unlocked, multiplier_cost), False, BLACK)
         upgrade_multiplier_text = super_small_font.render(humanize.intword(money_muliplier) + " Multiplier", False, BLACK)
 
@@ -344,7 +344,7 @@ def main():
                                 super_small_font.render('Owned ' + str(theme_parks_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(space_stations_owned) , False, BLACK),
                                 super_small_font.render('Owned ' + str(pizza_dimensions_owned) , False, BLACK)]        
-        building_money_per_second_text = [super_small_font.render('+' + humanize.intword(pizza_stand_money) + '$/s', False, BLACK),
+        building_money_per_second_text = [super_small_font.render('+' + humanize.intword(str(pizza_stand_money), "%0.2f") + '$/s', False, BLACK),
                                           super_small_font.render('+' + humanize.intword(food_truck_money) + '$/s', False, BLACK),
                                           super_small_font.render('+' + humanize.intword(pizzeria_money) + '$/s', False, BLACK),
                                           super_small_font.render('+' + humanize.intword(theme_park_money) + '$/s', False, BLACK),
