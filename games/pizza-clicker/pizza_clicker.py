@@ -83,7 +83,7 @@ PIZZA_PRESS_GROWTH = 12
 # currency abbreviations
 
 #CURRANCY
-MONEY = 999999.0 #MAIN CURRANCY
+MONEY = 0.0 #MAIN CURRANCY
 
 
 # ---Vars---
@@ -143,7 +143,6 @@ def main():
     upgrade = 1
     multiplier_cost = UPGRADE_COST
     money_per_second = 0.0
-    money_per_second_count = 0.0
 
     # Pizza
     pizza_pressed = False
@@ -176,7 +175,6 @@ def main():
                     grow_pizza(-PIZZA_PRESS_GROWTH)
                     add_money = int(1 * money_muliplier)
                     money += add_money
-                    money_per_second_count += add_money
                     
                     print("---MONEY---")
                     print("")
@@ -327,7 +325,10 @@ def main():
             button_color[6] = unavailable_color
         #endregion 
         # Text
-        money_per_second_text = small_font.render('+' + humanize.intword(money_per_second, "%0.2f") + '$/s' , False, WHITE)
+        if money_per_second < 999:
+            money_per_second_text = small_font.render('+' + str(round(money_per_second, 2)) + '$/s' , False, WHITE)
+        else:
+            money_per_second_text = small_font.render('+' + humanize.intword(money_per_second, "%0.2f") + '$/s' , False, WHITE)
         money_text = font.render('$' + humanize.intword(money, "%0.2f"), False, WHITE)
         topping_upgrade_text = small_font.render(buy_next_topping_text(toppings_unlocked, multiplier_cost), False, BLACK)
         upgrade_multiplier_text = super_small_font.render(humanize.intword(money_muliplier) + " Multiplier", False, BLACK)
