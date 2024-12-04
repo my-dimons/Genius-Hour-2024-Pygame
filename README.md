@@ -3,6 +3,7 @@
 How to Download
 =
 (Download Here: https://github.com/my-dimons/Genius-Hour-2024-Pygame/tree/main/executables/Finished)
+
 ^READ BEFORE CLICKING^
 1. Open the link above, then click on the game (.exe) that you want to download (Click on the name of the game, ex. "button.exe")
 2. In the top right there are multiple buttons (one says "Raw", one is 2 squares overlapping, and there's one with a down arrow into a half box/square). Click on the download button (down arrow pointing into a bottom half of a box), This downloads the "Raw" which is what you want
