@@ -59,16 +59,16 @@ SAUCE_RADIUS = PIZZA_RADIUS - 15
 # cheese
 CHEESE_RADIUS = PIZZA_RADIUS - 25
 # pepperoni
-PEPPERONI_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'pepperoni.png'))
+PEPPERONI_IMAGE = pygame.image.load(os.path.join('assets', 'pepperoni.png'))
 PEPPERONI = pygame.transform.scale(PEPPERONI_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
 # mushrooms
-MUSHROOM_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'mushroom.png'))
+MUSHROOM_IMAGE = pygame.image.load(os.path.join('assets', 'mushroom.png'))
 MUSHROOM = pygame.transform.scale(MUSHROOM_IMAGE, (TOPPING_DIMENSIONS, TOPPING_DIMENSIONS))
 # olives
-OLIVES_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'olives.png'))
+OLIVES_IMAGE = pygame.image.load(os.path.join('assets', 'olives.png'))
 OLIVES = pygame.transform.scale(OLIVES_IMAGE, (TOPPING_DIMENSIONS/2, TOPPING_DIMENSIONS/2))
 # tomato
-TOMATO_IMAGE = pygame.image.load(os.path.join('games', 'pizza-clicker', 'assets', 'tomato.png'))
+TOMATO_IMAGE = pygame.image.load(os.path.join('assets', 'tomato.png'))
 TOMATO = pygame.transform.scale(TOMATO_IMAGE, (TOPPING_DIMENSIONS/1.5, TOPPING_DIMENSIONS/1.5))
 
 SAUCE_UNLOCKED = False
@@ -154,9 +154,9 @@ def main():
     upgrade_multiplier_button = pygame.Rect(WIDTH/2, HEIGHT - HEIGHT/8, BUTTON_WIDTH, BUTTON_HEIGHT)
 
     # Font
-    font = pygame.font.SysFont('Calibri', 70)
-    small_font = pygame.font.SysFont('Calibri', 30)
-    super_small_font = pygame.font.SysFont('Calibri', 15)
+    font = pygame.font.SysFont('Cambria', 70)
+    small_font = pygame.font.SysFont('Cambria', 30)
+    super_small_font = pygame.font.SysFont('Cambria', 15)
     # Timers
     money_per_second_interval = 1000 # 1 seconds
     money_per_second_timer = pygame.USEREVENT + 1
@@ -414,7 +414,7 @@ def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_s
     pygame.draw.rect(WIN, button_color[7], pygame.Rect(reset_button.x, reset_button.y, reset_button.width, reset_button.height)) # reset button
     upgrade_text_rect = upgrade_text.get_rect(center=(button.x + upgrade_text.get_rect().width/2 + 15, button.y + upgrade_text.get_rect().height)) # upgrade text
     upgrade_multiplier_text_rect = upgrade_multiplier_text.get_rect(center=(button.x + upgrade_multiplier_text.get_rect().width/2 + 16, button.y + upgrade_multiplier_text.get_rect().height/2 + 50))
-    reset_text_rect = reset_text.get_rect(center=(reset_button.x * 1.8, reset_button.y + reset_text.get_rect().height/2 + 20))
+    reset_text_rect = reset_text.get_rect(center=(reset_button.x * 1.65, reset_button.y + reset_text.get_rect().height/2 + 16))
     WIN.blit(reset_text, reset_text_rect)
     WIN.blit(upgrade_multiplier_text, upgrade_multiplier_text_rect)
     WIN.blit(upgrade_text, upgrade_text_rect)
