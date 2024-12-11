@@ -24,7 +24,7 @@ def main():
     ticks = 0
 
     # Timer
-    randomRange = random.randint(3, 6)
+    randomRange = random.randint(2, 4)
     TIMEREVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(TIMEREVENT, randomRange * 1000)
     
@@ -52,6 +52,7 @@ def main():
                     time_text = font.render(str(seconds - randomRange) + " Second(s), " + str(milliseconds) + " Milliseconds", False, (0, 0, 0))
                 else:
                     print("CLICKED TOO EARLY")
+                    pygame.quit()
         
         # Timer text
         

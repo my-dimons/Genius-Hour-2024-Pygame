@@ -84,7 +84,7 @@ PIZZA_PRESS_GROWTH = 12
 # currency abbreviations
 
 #CURRANCY
-MONEY = 999999999.0 #MAIN CURRANCY
+MONEY = 0.0 #MAIN CURRANCY
 
 
 # ---Vars---
