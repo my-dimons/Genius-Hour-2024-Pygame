@@ -23,9 +23,9 @@ PIZZA_POS = WIDTH/4, HEIGHT/2
 BUTTON_WIDTH = 550
 BUTTON_HEIGHT = 75
 # upgrades
-UPGRADE_COST = 100
+UPGRADE_COST = 50
 MULTIPLIER_ADD = 1
-UPGRADE_COST_INCREASE = 10
+UPGRADE_COST_INCREASE = 15
 
 #$/S BUILDINGS
 BUILDING_PRICE_INCREASE = 1.2
@@ -94,6 +94,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pizza Clicker")
 
 def main():
+    tutorial_stage = 0
     global BUTTON_WIDTH, BUTTON_HEIGHT
     reset_button = pygame.Rect(PIZZA_POS[0] - BUTTON_WIDTH/4, HEIGHT - HEIGHT/8, BUTTON_WIDTH/2, BUTTON_HEIGHT)
     get_global_buildings()
@@ -159,8 +160,10 @@ def main():
     super_small_font = pygame.font.SysFont('Cambria', 15)
     # Timers
     money_per_second_interval = 1000 # 1 seconds
+    money_tutorial_timer = 3000 # 3 seconds
     money_per_second_timer = pygame.USEREVENT + 1
-    pygame.time.set_timer(money_per_second_timer , money_per_second_interval)
+    money_tutorial_text_timer = pygame.USEREVENT + 2
+    pygame.time.set_timer(money_per_second_timer, money_per_second_interval)
 
     pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money = update_building_money(pizza_stand_money, food_truck_money, pizzeria_money, theme_park_money, space_station_money, pizza_dimension_money, upgrade)
     
@@ -210,6 +213,8 @@ def main():
                 if reset_button.collidepoint(mouse_pos):
                     button_pressed[7] = True
                     button_color[7] = pressed_color
+                    tutorial_stage = 0
+                    toppings_unlocked = 0
                     money, money_muliplier, money_per_second, pizza_stands_owned, food_trucks_owned, pizzerias_owned, theme_parks_owned, space_stations_owned, pizza_dimensions_owned = reset(money, money_muliplier, money_per_second, pizza_stands_owned, food_trucks_owned, pizzerias_owned, theme_parks_owned, space_stations_owned, pizza_dimensions_owned)
 
                 # Buy $/s building
@@ -284,6 +289,8 @@ def main():
                     button_color[7] = normal_color
             # buttons on hover effect (sets to normal, or hover colors)
             else:
+                #if clicked_circle(pizza, PIZZA_RADIUS):
+                #    grow_pizza(PIZZA_RADIUS + PIZZA_PRESS_GROWTH)
                 if building_buttons[0][0].collidepoint(mouse_pos) and button_pressed[0] == False:
                     button_color[0] = hover_color
                 elif building_buttons[0][0].collidepoint(mouse_pos) == False and button_pressed[0] == False:
@@ -320,7 +327,8 @@ def main():
             # Calculates the money per second
             if event.type == money_per_second_timer:
                 money += money_per_second
-
+            if event.type == money_tutorial_text_timer and tutorial_stage == 2:
+                tutorial_stage = 3
             if event.type == pygame.QUIT:
                 run = False
         #region sets button colors to unavailable
@@ -349,6 +357,7 @@ def main():
         upgrade_multiplier_text = super_small_font.render(humanize.intword(money_muliplier) + " Multiplier", False, BLACK)
         reset_text = small_font.render("RESET", False, BLACK)
 
+
         building_buy_text = [small_font.render(building_buttons[0][1] + ' | $' + humanize.intword(pizza_stand_price), False, BLACK),
                              small_font.render(building_buttons[1][1] + ' | $' + humanize.intword(food_truck_price), False, BLACK),
                              small_font.render(building_buttons[2][1] + ' | $' + humanize.intword(pizzeria_price), False, BLACK),
@@ -368,6 +377,20 @@ def main():
                                           super_small_font.render('+' + humanize.intword(space_station_money) + '$/s', False, BLACK),
                                           super_small_font.render('+' + humanize.intword(pizza_dimension_money)+ '$/s', False, BLACK)]
         
+        if money >= 25 and tutorial_stage == 0:
+            tutorial_stage = 1
+        if money < 25 and tutorial_stage == 1:
+            tutorial_stage = 2
+            pygame.time.set_timer(money_tutorial_text_timer, money_tutorial_timer, 0)
+        if money >= UPGRADE_COST and tutorial_stage == 3:
+            tutorial_stage = 4
+        if upgrade > 1 and tutorial_stage == 4:
+            tutorial_stage = 5
+        #TUTORIAL TEXT
+        click_tutorial = font.render("CLICK HERE", False, BLACK)
+        buy_building_tutorial = small_font.render("Buy buildings ->", False, WHITE)
+        earn_money_tutorial = small_font.render("<- Earn money", False, WHITE)
+        buy_multipliers_tutorial = small_font.render("Buy upgrades for money multiplier ->", False, WHITE)
         
         
         draw_window(money_text,
@@ -383,7 +406,12 @@ def main():
                     button_color,
                     upgrade_multiplier_text,
                     reset_text,
-                    reset_button)
+                    reset_button,
+                    click_tutorial,
+                    tutorial_stage,
+                    buy_building_tutorial,
+                    earn_money_tutorial,
+                    buy_multipliers_tutorial)
 
 def buy_building(owned, price, money):
     global BUILDING_PRICE_INCREASE
@@ -397,7 +425,7 @@ def buy_building(owned, price, money):
         print("NOT ENOUGH MONEY")
         return owned, price, money
 
-def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, variation, building_text, buildings, buildings_owned_text, building_money_per_second_text, button_color, upgrade_multiplier_text, reset_text, reset_button): #UPDATE DISPLAY
+def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_second, variation, building_text, buildings, buildings_owned_text, building_money_per_second_text, button_color, upgrade_multiplier_text, reset_text, reset_button, click_here, tutorial_stage, buy_building_tutorial, earn_money_tutorial, upgrade_multiplier_tutorial): #UPDATE DISPLAY
     WIN.fill(BACKGROUND_COLOR)
 
     # Render pizza with toppings
@@ -411,14 +439,24 @@ def draw_window(money_text, upgrade_text, button, toppings_unlocked, money_per_s
 
     # Render upgrade button
     pygame.draw.rect(WIN, button_color[6], pygame.Rect(button.x, button.y, button.width, button.height)) # upgrade button
-    pygame.draw.rect(WIN, button_color[7], pygame.Rect(reset_button.x, reset_button.y, reset_button.width, reset_button.height)) # reset button
     upgrade_text_rect = upgrade_text.get_rect(center=(button.x + upgrade_text.get_rect().width/2 + 15, button.y + upgrade_text.get_rect().height)) # upgrade text
     upgrade_multiplier_text_rect = upgrade_multiplier_text.get_rect(center=(button.x + upgrade_multiplier_text.get_rect().width/2 + 16, button.y + upgrade_multiplier_text.get_rect().height/2 + 50))
     reset_text_rect = reset_text.get_rect(center=(reset_button.x * 1.65, reset_button.y + reset_text.get_rect().height/2 + 16))
-    WIN.blit(reset_text, reset_text_rect)
     WIN.blit(upgrade_multiplier_text, upgrade_multiplier_text_rect)
     WIN.blit(upgrade_text, upgrade_text_rect)
-
+    if tutorial_stage == 0:
+        WIN.blit(click_here, (164, 460))
+    elif tutorial_stage == 1:
+        WIN.blit(buy_building_tutorial, (470, 55))
+    elif tutorial_stage == 2:
+        WIN.blit(earn_money_tutorial, (130, 28))    
+    elif tutorial_stage == 3:
+        WIN.blit(click_here, (164, 460))    
+    elif tutorial_stage == 4:
+        WIN.blit(upgrade_multiplier_tutorial, (180, 895))
+    elif tutorial_stage == 5:
+        pygame.draw.rect(WIN, button_color[7], pygame.Rect(reset_button.x, reset_button.y, reset_button.width, reset_button.height)) # reset button     
+        WIN.blit(reset_text, reset_text_rect)
     pygame.display.update()
 
 # Calculates the $/s using all the bought buildings and multipliers
